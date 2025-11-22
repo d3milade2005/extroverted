@@ -1,0 +1,22 @@
+-- -- This script runs automatically when postgres-services container starts for the first time
+--
+-- -- Create separate databases for each microservice
+-- CREATE DATABASE user_db;
+-- CREATE DATABASE product_db;
+-- CREATE DATABASE event_db;
+-- CREATE DATABASE notification_db;
+--
+-- -- Grant full permissions to extroverted user
+-- GRANT ALL PRIVILEGES ON DATABASE user_db TO extroverted;
+-- GRANT ALL PRIVILEGES ON DATABASE product_db TO extroverted;
+-- GRANT ALL PRIVILEGES ON DATABASE event_db TO extroverted;
+-- GRANT ALL PRIVILEGES ON DATABASE notification_db TO extroverted;
+--
+-- -- Connect to each database and grant schema permissions
+-- GRANT ALL ON SCHEMA public TO extroverted;
+--
+-- GRANT ALL ON SCHEMA public TO extroverted;
+--
+-- GRANT ALL ON SCHEMA public TO extroverted;
+--
+-- GRANT ALL ON SCHEMA public TO extroverted;

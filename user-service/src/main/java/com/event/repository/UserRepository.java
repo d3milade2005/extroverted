@@ -1,0 +1,32 @@
+package com.event.repository;
+
+
+import com.event.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByKeycloakId(String keycloakId);
+
+    Optional<User> findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
+
+    boolean existsByKeycloakId(String keycloakId);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
+    @Query(value = "SELECT * FROM users WHERE ST_DWithin(location::geography, " +
+            "ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, :radiusMeters)",
+            nativeQuery = true)
+    Iterable<User> findUsersWithinRadius(@Param("latitude") Double latitude,
+                                         @Param("longitude") Double longitude,
+                                         @Param("radiusMeters") Double radiusMeters);
+}

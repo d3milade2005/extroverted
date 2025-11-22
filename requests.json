@@ -1,0 +1,371 @@
+{
+  "testData": {
+    "credentials": [
+      {
+        "username": "tech_guru",
+        "password": "Tech@123"
+      },
+      {
+        "username": "code_master",
+        "password": "CodeMaster!1"
+      },
+      {
+        "username": "data_ninja",
+        "password": "DataNinja#9"
+      },
+      {
+        "username": "ai_builder",
+        "password": "AIbuild2025!"
+      },
+      {
+        "username": "cloud_architect",
+        "password": "Cloud#99"
+      }
+    ],
+    "registrations": [
+      {
+        "username": "tech_guru",
+        "email": "guru.tech@example.com",
+        "firstName": "Alex",
+        "lastName": "Johnson",
+        "password": "Tech@123"
+      },
+      {
+        "username": "code_master",
+        "email": "master.code@example.org",
+        "firstName": "Jordan",
+        "lastName": "Smith",
+        "password": "CodeMaster!1"
+      },
+      {
+        "username": "data_ninja",
+        "email": "ninja.data@example.net",
+        "firstName": "Taylor",
+        "lastName": "Lee",
+        "password": "DataNinja#9"
+      },
+      {
+        "username": "ai_builder",
+        "email": "builder.ai@company.com",
+        "firstName": "Riley",
+        "lastName": "Anderson",
+        "password": "AIbuild2025!"
+      },
+      {
+        "username": "cloud_architect",
+        "email": "architect.cloud@example.dev",
+        "firstName": "Casey",
+        "lastName": "Morgan",
+        "password": "Cloud#99"
+      }
+    ],
+    "profileInitializations": [
+      {
+        "user": "tech_guru",
+        "data": {
+          "city": "Lagos",
+          "latitude": 6.5244,
+          "longitude": 3.3792,
+          "interests": [
+            "tech",
+            "music",
+            "networking",
+            "startups"
+          ],
+          "fashionStyle": {
+            "style": "streetwear",
+            "colors": ["black", "blue", "white"],
+            "formality": "casual",
+            "brands": ["Nike", "Adidas"],
+            "occasions": ["concerts", "tech-meetups", "casual-hangouts"]
+          }
+        }
+      },
+      {
+        "user": "code_master",
+        "data": {
+          "city": "Abuja",
+          "latitude": 9.0765,
+          "longitude": 7.3986,
+          "interests": [
+            "tech",
+            "networking",
+            "startups",
+            "innovation"
+          ],
+          "fashionStyle": {
+            "style": "business-casual",
+            "colors": ["navy", "white", "gray"],
+            "formality": "smart-casual",
+            "brands": ["Zara", "Mango"],
+            "occasions": ["networking-events", "conferences", "meetups"]
+          }
+        }
+      },
+      {
+        "user": "data_ninja",
+        "data": {
+          "city": "Victoria Island, Lagos",
+          "latitude": 6.4281,
+          "longitude": 3.4219,
+          "interests": [
+            "music",
+            "fashion",
+            "nightlife",
+            "food",
+            "art"
+          ],
+          "fashionStyle": {
+            "style": "afro-fusion",
+            "colors": ["ankara-prints", "gold", "green", "orange"],
+            "formality": "semi-formal",
+            "brands": ["Zara", "H&M", "Local Designers"],
+            "occasions": ["weddings", "concerts", "date-night", "parties"]
+          }
+        }
+      },
+      {
+        "user": "ai_builder",
+        "data": {
+          "city": "Lekki, Lagos",
+          "latitude": 6.4698,
+          "longitude": 3.5852,
+          "interests": [
+            "nightlife",
+            "music",
+            "dancing",
+            "socializing"
+          ],
+          "fashionStyle": {
+            "style": "trendy",
+            "colors": ["red", "black", "gold", "silver"],
+            "formality": "party-wear",
+            "brands": ["Fashion Nova", "PrettyLittleThing"],
+            "occasions": ["clubs", "beach-parties", "rooftop-events"]
+          }
+        }
+      },
+      {
+        "user": "cloud_architect",
+        "data": {
+          "city": "Ikeja, Lagos",
+          "latitude": 6.5952,
+          "longitude": 3.3621,
+          "interests": [
+            "food",
+            "culture",
+            "art",
+            "photography"
+          ],
+          "fashionStyle": {
+            "style": "bohemian",
+            "colors": ["earth-tones", "beige", "brown", "green"],
+            "formality": "casual",
+            "brands": ["Thrift", "Vintage"],
+            "occasions": ["art-galleries", "food-festivals", "cultural-events"]
+          }
+        }
+      }
+    ],
+    "locationUpdates": [
+      {
+        "user": "tech_guru",
+        "data": {
+          "latitude": 6.4281,
+          "longitude": 3.4219,
+          "city": "Victoria Island, Lagos"
+        }
+      },
+      {
+        "user": "code_master",
+        "data": {
+          "latitude": 6.5244,
+          "longitude": 3.3792,
+          "city": "Ikeja, Lagos"
+        }
+      },
+      {
+        "user": "data_ninja",
+        "data": {
+          "latitude": 6.4698,
+          "longitude": 3.5852,
+          "city": "Lekki, Lagos"
+        }
+      }
+    ],
+    "preferenceUpdates": [
+      {
+        "user": "tech_guru",
+        "data": {
+          "interests": [
+            "tech",
+            "music",
+            "networking",
+            "startups",
+            "gaming"
+          ],
+          "fashionStyle": {
+            "style": "tech-casual",
+            "colors": ["black", "gray", "blue"],
+            "formality": "casual",
+            "brands": ["Nike", "Adidas", "Uniqlo"],
+            "occasions": ["hackathons", "conferences", "gaming-events"]
+          }
+        }
+      },
+      {
+        "user": "code_master",
+        "data": {
+          "interests": [
+            "tech",
+            "networking",
+            "startups",
+            "innovation",
+            "fitness"
+          ],
+          "fashionStyle": {
+            "style": "smart-casual",
+            "colors": ["navy", "white", "gray", "black"],
+            "formality": "business-casual",
+            "brands": ["Zara", "Mango", "H&M"],
+            "occasions": ["networking-events", "conferences", "meetups", "gym"]
+          }
+        }
+      },
+      {
+        "user": "data_ninja",
+        "data": {
+          "interests": [
+            "music",
+            "fashion",
+            "nightlife",
+            "food",
+            "art",
+            "travel"
+          ],
+          "fashionStyle": {
+            "style": "eclectic",
+            "colors": ["ankara-prints", "gold", "green", "orange", "purple"],
+            "formality": "versatile",
+            "brands": ["Zara", "H&M", "Local Designers", "ASOS"],
+            "occasions": ["weddings", "concerts", "date-night", "parties", "art-shows"]
+          }
+        }
+      }
+    ]
+  },
+  "endpoints": {
+    "auth": {
+      "baseUrl": "http://localhost:8082",
+      "register": "/api/auth/register",
+      "login": "/api/auth/login",
+      "refresh": "/api/auth/refresh",
+      "me": "/api/auth/me",
+      "changePassword": "/api/auth/change-password",
+      "logout": "/api/auth/logout"
+    },
+    "users": {
+      "baseUrl": "http://localhost:8083",
+      "initialize": "/api/users/initialize",
+      "getProfile": "/api/users/me",
+      "updatePreferences": "/api/users/me/preferences",
+      "updateLocation": "/api/users/me/location",
+      "deleteAccount": "/api/users/me"
+    }
+  },
+  "testScenarios": [
+    {
+      "scenario": "Complete User Registration Flow",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Register User",
+          "method": "POST",
+          "url": "http://localhost:8082/api/auth/register",
+          "body": {
+            "username": "tech_guru",
+            "email": "guru.tech@example.com",
+            "firstName": "Alex",
+            "lastName": "Johnson",
+            "password": "Tech@123"
+          }
+        },
+        {
+          "step": 2,
+          "action": "Login",
+          "method": "POST",
+          "url": "http://localhost:8082/api/auth/login",
+          "body": {
+            "username": "tech_guru",
+            "password": "Tech@123"
+          },
+          "saveToken": "accessToken"
+        },
+        {
+          "step": 3,
+          "action": "Initialize Profile",
+          "method": "POST",
+          "url": "http://localhost:8083/api/users/initialize",
+          "headers": {
+            "Authorization": "Bearer {{accessToken}}"
+          },
+          "body": {
+            "city": "Lagos",
+            "latitude": 6.5244,
+            "longitude": 3.3792,
+            "interests": ["tech", "music", "networking", "startups"],
+            "fashionStyle": {
+              "style": "streetwear",
+              "colors": ["black", "blue", "white"],
+              "formality": "casual",
+              "brands": ["Nike", "Adidas"],
+              "occasions": ["concerts", "tech-meetups", "casual-hangouts"]
+            }
+          }
+        },
+        {
+          "step": 4,
+          "action": "Get Profile",
+          "method": "GET",
+          "url": "http://localhost:8083/api/users/me",
+          "headers": {
+            "Authorization": "Bearer {{accessToken}}"
+          }
+        },
+        {
+          "step": 5,
+          "action": "Update Location",
+          "method": "PATCH",
+          "url": "http://localhost:8083/api/users/me/location",
+          "headers": {
+            "Authorization": "Bearer {{accessToken}}"
+          },
+          "body": {
+            "latitude": 6.4281,
+            "longitude": 3.4219,
+            "city": "Victoria Island, Lagos"
+          }
+        },
+        {
+          "step": 6,
+          "action": "Update Preferences",
+          "method": "PATCH",
+          "url": "http://localhost:8083/api/users/me/preferences",
+          "headers": {
+            "Authorization": "Bearer {{accessToken}}"
+          },
+          "body": {
+            "interests": ["tech", "music", "networking", "startups", "gaming"],
+            "fashionStyle": {
+              "style": "tech-casual",
+              "colors": ["black", "gray", "blue"],
+              "formality": "casual",
+              "brands": ["Nike", "Adidas", "Uniqlo"],
+              "occasions": ["hackathons", "conferences", "gaming-events"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

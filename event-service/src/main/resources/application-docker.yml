@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres-services:5432/event_db
+    username: ${SERVICES_DB_USER}
+    password: ${SERVICES_DB_PASSWORD}
+
+  jpa:
+    show-sql: false
+  # Keycloak uses Docker service name
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/extroverted
+          jwk-set-uri: http://keycloak:8080/realms/extroverted/protocol/openid-connect/certs
+
+logging:
+  level:
+    root: INFO
+    com.event: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: WARN
