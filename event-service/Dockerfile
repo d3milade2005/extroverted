@@ -22,7 +22,7 @@ LABEL maintainer="olakunledemilade11@gmail.com"
 LABEL service="event-service"
 LABEL version="1.0.0"
 
-RUN addgroup -S spring && addevent -S spring -G spring
+RUN addgroup -S spring && adduser -S spring -G spring
 
 WORKDIR /app
 COPY --from=build /workspace/event-service/target/*.jar app.jar
