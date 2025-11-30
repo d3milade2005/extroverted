@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -42,6 +43,7 @@ public class EventServiceClient {
                             .queryParam("page", 0)
                             .queryParam("size", limit)
                             .build())
+                    .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .body(responseType);
 
@@ -76,6 +78,7 @@ public class EventServiceClient {
                             .queryParam("longitude", longitude)
                             .queryParam("radiusKm", radiusKm)
                             .build())
+                    .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     // 2. Use ParameterizedTypeReference to handle List<Map>
                     .body(new ParameterizedTypeReference<List<Map<String, Object>>>() {});
@@ -104,6 +107,7 @@ public class EventServiceClient {
             List<Map<String, Object>> response = eventClient.get()
                     .uri("/api/interactions/user/{userId}", userId)
                     .headers(h -> h.setBearerAuth(token))
+                    .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .body(new ParameterizedTypeReference<List<Map<String, Object>>>() {});
             if (response != null) {
@@ -131,6 +135,7 @@ public class EventServiceClient {
                             .queryParam("page", 0)
                             .queryParam("size", limit)
                             .build(categoryId))
+                    .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .body(new ParameterizedTypeReference<Map<String, Object>>() {});
 

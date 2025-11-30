@@ -1,7 +1,10 @@
 package com.event.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +17,10 @@ import java.util.UUID;
         @Index(name = "idx_rec_event", columnList = "event_id"),
         @Index(name = "idx_rec_user_event", columnList = "user_id, event_id")
 })
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RecommendationHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
