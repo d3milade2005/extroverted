@@ -1,0 +1,447 @@
+{
+  "eventService": {
+    "baseUrl": "http://localhost:8084",
+    "endpoints": {
+      "categories": {
+        "list": "/api/categories",
+        "getById": "/api/categories/{id}",
+        "getByName": "/api/categories/name/{name}"
+      },
+      "events": {
+        "create": "/api/events",
+        "getById": "/api/events/{id}",
+        "update": "/api/events/{id}",
+        "delete": "/api/events/{id}",
+        "upcoming": "/api/events/upcoming",
+        "nearby": "/api/events/nearby",
+        "search": "/api/events/search",
+        "myEvents": "/api/events/host/me",
+        "byCategory": "/api/events/category/{categoryId}"
+      },
+      "interactions": {
+        "create": "/api/events/{id}/interactions",
+        "remove": "/api/events/{id}/interactions/{type}"
+      }
+    }
+  },
+  "sampleRequests": {
+    "1_getCategories": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/categories",
+      "headers": {},
+      "description": "Get all event categories (music, tech, fashion, etc.)"
+    },
+    "2_createMusicEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Afrobeat Night at Landmark",
+        "description": "Experience the best of Afrobeat music with top Nigerian artists. Dance the night away to contemporary Afrobeat, Afropop, and traditional highlife.",
+        "categoryId": "MUSIC_CATEGORY_UUID",
+        "venue": "Landmark Event Centre",
+        "address": "Water Corporation Drive, Victoria Island, Lagos",
+        "latitude": 6.4281,
+        "longitude": 3.4219,
+        "startTime": "2025-12-05T20:00:00",
+        "endTime": "2025-12-06T03:00:00",
+        "ticketPrice": 5000.00,
+        "ticketLimit": 500,
+        "imageUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
+      }
+    },
+    "3_createTechEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Tech Connect Lagos Meetup",
+        "description": "Monthly networking event for tech professionals, entrepreneurs, and enthusiasts. Featuring talks on AI, blockchain, and startup growth.",
+        "categoryId": "TECH_CATEGORY_UUID",
+        "venue": "Co-Creation Hub",
+        "address": "294 Herbert Macaulay Way, Yaba, Lagos",
+        "latitude": 6.5076,
+        "longitude": 3.3724,
+        "startTime": "2025-11-28T17:00:00",
+        "endTime": "2025-11-28T21:00:00",
+        "ticketPrice": 0.00,
+        "ticketLimit": 200,
+        "imageUrl": "https://images.unsplash.com/photo-1540575467063-178a50c2df87"
+      }
+    },
+    "4_createFashionEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Lagos Fashion Week 2025",
+        "description": "Africa's biggest fashion event showcasing the best of African design, creativity, and style. Experience runway shows and designer exhibitions.",
+        "categoryId": "FASHION_CATEGORY_UUID",
+        "venue": "Federal Palace Hotel",
+        "address": "26 Ahmadu Bello Way, Victoria Island, Lagos",
+        "latitude": 6.4273,
+        "longitude": 3.4266,
+        "startTime": "2025-12-10T14:00:00",
+        "endTime": "2025-12-10T22:00:00",
+        "ticketPrice": 15000.00,
+        "ticketLimit": 800,
+        "imageUrl": "https://images.unsplash.com/photo-1558769132-cb1aea8f5b96"
+      }
+    },
+    "5_createFoodEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Jollof Festival Lagos",
+        "description": "The ultimate food festival celebrating West Africa's most beloved dish. Taste different Jollof rice styles, street food, and enjoy live music.",
+        "categoryId": "FOOD_CATEGORY_UUID",
+        "venue": "Muri Okunola Park",
+        "address": "Muri Okunola Street, Victoria Island, Lagos",
+        "latitude": 6.4306,
+        "longitude": 3.4210,
+        "startTime": "2025-12-15T12:00:00",
+        "endTime": "2025-12-15T20:00:00",
+        "ticketPrice": 3000.00,
+        "ticketLimit": 1000,
+        "imageUrl": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1"
+      }
+    },
+    "6_createNightlifeEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Detty December Beach Party",
+        "description": "Lagos' hottest beach party featuring top DJs, live performances, and beach games. Dress code: Beach chic with island vibes.",
+        "categoryId": "NIGHTLIFE_CATEGORY_UUID",
+        "venue": "Elegushi Beach",
+        "address": "Lekki-Epe Expressway, Lekki, Lagos",
+        "latitude": 6.4698,
+        "longitude": 3.5852,
+        "startTime": "2025-12-20T15:00:00",
+        "endTime": "2025-12-21T02:00:00",
+        "ticketPrice": 8000.00,
+        "ticketLimit": 2000,
+        "imageUrl": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3"
+      }
+    },
+    "7_createFreeEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Community Fitness Bootcamp",
+        "description": "Free outdoor fitness session for all levels. Includes cardio, strength training, and yoga. Bring your mat and water bottle!",
+        "categoryId": "WELLNESS_CATEGORY_UUID",
+        "venue": "Freedom Park",
+        "address": "Broad Street, Lagos Island, Lagos",
+        "latitude": 6.4506,
+        "longitude": 3.3895,
+        "startTime": "2025-11-25T06:00:00",
+        "endTime": "2025-11-25T08:00:00",
+        "ticketPrice": 0.00,
+        "ticketLimit": 50
+      }
+    },
+    "8_getEventById": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/EVENT_UUID",
+      "headers": {},
+      "description": "Get event details (public - no auth needed)"
+    },
+    "9_updateEvent": {
+      "method": "PATCH",
+      "url": "http://localhost:8084/api/events/EVENT_UUID",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "title": "Updated: Afrobeat Night at Landmark",
+        "ticketPrice": 6000.00,
+        "ticketLimit": 600
+      }
+    },
+    "10_deleteEvent": {
+      "method": "DELETE",
+      "url": "http://localhost:8084/api/events/EVENT_UUID",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      }
+    },
+    "11_getUpcomingEvents": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/upcoming?page=0&size=20",
+      "headers": {},
+      "description": "Get paginated list of upcoming events"
+    },
+    "12_findNearbyEvents": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/nearby?latitude=6.5244&longitude=3.3792&radiusKm=10",
+      "headers": {},
+      "description": "Find events within 10km of Lagos (Ikeja)"
+    },
+    "13_findNearbyVictoriaIsland": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/nearby?latitude=6.4281&longitude=3.4219&radiusKm=5",
+      "headers": {},
+      "description": "Find events within 5km of Victoria Island"
+    },
+    "14_searchFreeEvents": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?freeOnly=true",
+      "headers": {},
+      "description": "Find all free events"
+    },
+    "15_searchMusicEvents": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?categoryId=MUSIC_CATEGORY_UUID",
+      "headers": {},
+      "description": "Find all music events"
+    },
+    "16_searchEventsByPriceRange": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?minPrice=0&maxPrice=10000",
+      "headers": {},
+      "description": "Find events between 0 and 10,000 Naira"
+    },
+    "17_searchEventsByDate": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?startDate=2025-12-01T00:00:00&endDate=2025-12-31T23:59:59",
+      "headers": {},
+      "description": "Find all events in December 2025"
+    },
+    "18_searchWithKeyword": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?keyword=music",
+      "headers": {},
+      "description": "Search events containing 'music' in title or description"
+    },
+    "19_searchVerifiedEventsOnly": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?verifiedOnly=true",
+      "headers": {},
+      "description": "Find only verified events"
+    },
+    "20_searchAvailableTicketsOnly": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?availableTicketsOnly=true",
+      "headers": {},
+      "description": "Find events with available tickets"
+    },
+    "21_complexSearch": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/search?categoryId=MUSIC_CATEGORY_UUID&maxPrice=10000&latitude=6.5244&longitude=3.3792&radiusKm=15&availableTicketsOnly=true",
+      "headers": {},
+      "description": "Music events under 10k, within 15km, with tickets available"
+    },
+    "22_getMyEvents": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/host/me?page=0&size=20",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      },
+      "description": "Get all events I created as a host"
+    },
+    "23_getEventsByCategory": {
+      "method": "GET",
+      "url": "http://localhost:8084/api/events/category/CATEGORY_UUID?page=0&size=20",
+      "headers": {},
+      "description": "Get all events in a specific category"
+    },
+    "24_saveEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events/EVENT_UUID/interactions",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "type": "SAVE"
+      },
+      "description": "Save/bookmark an event"
+    },
+    "25_rsvpEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events/EVENT_UUID/interactions",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "type": "RSVP"
+      },
+      "description": "RSVP to an event"
+    },
+    "26_viewEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events/EVENT_UUID/interactions",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "type": "VIEW"
+      },
+      "description": "Track event view (for analytics)"
+    },
+    "27_shareEvent": {
+      "method": "POST",
+      "url": "http://localhost:8084/api/events/EVENT_UUID/interactions",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "type": "SHARE"
+      },
+      "description": "Track event share"
+    },
+    "28_unsaveEvent": {
+      "method": "DELETE",
+      "url": "http://localhost:8084/api/events/EVENT_UUID/interactions/SAVE",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      },
+      "description": "Remove saved/bookmarked event"
+    },
+    "29_removeRsvp": {
+      "method": "DELETE",
+      "url": "http://localhost:8084/api/events/EVENT_UUID/interactions/RSVP",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      },
+      "description": "Remove RSVP from event"
+    }
+  },
+  "testScenario": {
+    "description": "Complete workflow for testing event service",
+    "steps": [
+      {
+        "step": 1,
+        "action": "Get categories",
+        "request": "1_getCategories",
+        "saveResponse": "Save category UUIDs for creating events"
+      },
+      {
+        "step": 2,
+        "action": "Create music event",
+        "request": "2_createMusicEvent",
+        "note": "Replace MUSIC_CATEGORY_UUID with actual UUID from step 1",
+        "saveResponse": "Save event UUID"
+      },
+      {
+        "step": 3,
+        "action": "Create tech event",
+        "request": "3_createTechEvent",
+        "note": "Replace TECH_CATEGORY_UUID with actual UUID from step 1"
+      },
+      {
+        "step": 4,
+        "action": "Create fashion event",
+        "request": "4_createFashionEvent",
+        "note": "Replace FASHION_CATEGORY_UUID with actual UUID from step 1"
+      },
+      {
+        "step": 5,
+        "action": "Get event details",
+        "request": "8_getEventById",
+        "note": "Replace EVENT_UUID with UUID from step 2"
+      },
+      {
+        "step": 6,
+        "action": "Find nearby events",
+        "request": "12_findNearbyEvents",
+        "expected": "Should return events created in steps 2-4"
+      },
+      {
+        "step": 7,
+        "action": "Save event",
+        "request": "24_saveEvent",
+        "note": "Save the music event from step 2"
+      },
+      {
+        "step": 8,
+        "action": "RSVP to event",
+        "request": "25_rsvpEvent",
+        "note": "RSVP to the music event"
+      },
+      {
+        "step": 9,
+        "action": "Get my events",
+        "request": "22_getMyEvents",
+        "expected": "Should show all events you created"
+      },
+      {
+        "step": 10,
+        "action": "Search free events",
+        "request": "14_searchFreeEvents",
+        "expected": "Should show the free fitness bootcamp"
+      },
+      {
+        "step": 11,
+        "action": "Update event",
+        "request": "9_updateEvent",
+        "note": "Update the music event price"
+      },
+      {
+        "step": 12,
+        "action": "Complex search",
+        "request": "21_complexSearch",
+        "expected": "Filtered results based on multiple criteria"
+      }
+    ]
+  },
+  "locations": {
+    "lagos": {
+      "ikeja": {"latitude": 6.5244, "longitude": 3.3792},
+      "victoriaIsland": {"latitude": 6.4281, "longitude": 3.4219},
+      "lekki": {"latitude": 6.4698, "longitude": 3.5852},
+      "yaba": {"latitude": 6.5076, "longitude": 3.3724},
+      "ikoyi": {"latitude": 6.4541, "longitude": 3.4316}
+    },
+    "abuja": {
+      "maitama": {"latitude": 9.0820, "longitude": 7.4925},
+      "wuse": {"latitude": 9.0643, "longitude": 7.4892},
+      "garki": {"latitude": 9.0420, "longitude": 7.4893}
+    }
+  },
+  "interactionTypes": [
+    "VIEW",
+    "SAVE",
+    "SHARE",
+    "RSVP",
+    "BUY"
+  ],
+  "categories": [
+    "music",
+    "tech",
+    "fashion",
+    "food",
+    "nightlife",
+    "sports",
+    "art",
+    "business",
+    "education",
+    "wellness"
+  ]
+}

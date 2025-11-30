@@ -40,7 +40,7 @@ public class EventService {
 
     @Transactional
     public EventResponse createEvent(UUID hostId, CreateEventRequest request) {
-        // Validate category exists
+        // Validate category exists1
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         // Create location point

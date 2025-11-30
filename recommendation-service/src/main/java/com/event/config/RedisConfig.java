@@ -1,0 +1,39 @@
+//package com.event.security;
+//
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//
+//@Configuration
+//public class RedisConfig {
+//    @Bean
+//    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//        template.setConnectionFactory(connectionFactory);
+//
+//        // Use String serialization for keys
+//        StringRedisSerializer stringSerializer = new StringRedisSerializer();
+//        template.setKeySerializer(stringSerializer);
+//        template.setHashKeySerializer(stringSerializer);
+//
+//        // Use JSON serialization for values
+//        GenericJackson2JsonRedisSerializer jsonSerializer =
+//                new GenericJackson2JsonRedisSerializer(objectMapper());
+//        template.setValueSerializer(jsonSerializer);
+//        template.setHashValueSerializer(jsonSerializer);
+//
+//        template.afterPropertiesSet();
+//        return template;
+//    }
+//
+//    /**
+//     * Configure ObjectMapper for Redis serialization
+//     * Handles Java 8 Date/Time types properly
+//     */
+//    @Bean
+//    public ObjectMapper objectMapper() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(new JavaTimeModule());
+//        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//        return mapper;
+//    }
+//}
