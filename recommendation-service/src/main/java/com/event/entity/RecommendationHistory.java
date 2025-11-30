@@ -6,10 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.List;
+
 
 @Entity
 @Table(name = "recommendation_history", indexes = {
@@ -82,7 +86,8 @@ public class RecommendationHistory {
 
     // Metadata
     @Column(name = "recommendation_reason", columnDefinition = "TEXT[]")
-    private String[] recommendationReason;
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    private List<String> recommendationReason;
 
     @Column(name = "algorithm_version", length = 10)
     @Builder.Default
