@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @Column(name = "keycloak_id", nullable = false, unique = true)
-    private String keycloakId;
+    private UUID id;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;

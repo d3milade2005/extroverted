@@ -171,7 +171,7 @@ public class ScoringService {
         }
 
         // Check if event category matches any user interest
-        String eventCategory = event.getCategory().toLowerCase();
+        String eventCategory = event.getCategoryName().toLowerCase();
         for (String interest : user.getInterests()) {
             if (interest.toLowerCase().equals(eventCategory)) {
                 return 1.0;
@@ -196,13 +196,13 @@ public class ScoringService {
         // Count interactions with same category
         long sameCategoryCount = interactions.stream()
                 .filter(i -> i.getCategory() != null &&
-                        i.getCategory().equalsIgnoreCase(event.getCategory()))
+                        i.getCategory().equalsIgnoreCase(event.getCategoryName()))
                 .count();
 
         // Weight by interaction type
         double weightedScore = interactions.stream()
                 .filter(i -> i.getCategory() != null &&
-                        i.getCategory().equalsIgnoreCase(event.getCategory()))
+                        i.getCategory().equalsIgnoreCase(event.getCategoryName()))
                 .mapToDouble(InteractionDTO::getInteractionWeight)
                 .sum();
 

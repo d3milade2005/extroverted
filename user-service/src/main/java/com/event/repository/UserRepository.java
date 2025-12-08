@@ -8,16 +8,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByKeycloakId(String keycloakId);
+    Optional<User> findById(UUID id);
 
     Optional<User> findByUsername(String username);
 
     Optional<User> findByEmail(String email);
 
-    boolean existsByKeycloakId(String keycloakId);
+    boolean existsById(UUID id);
 
     boolean existsByUsername(String username);
 

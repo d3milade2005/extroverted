@@ -8,15 +8,15 @@ CREATE TABLE recommendation_history (
                                         event_id UUID NOT NULL,
 
     -- Overall score and ranking
-                                        score NUMERIC(3,2) NOT NULL CHECK (score >= 0 AND score <= 1),
+                                        score DOUBLE PRECISION NOT NULL CHECK (score >= 0 AND score <= 1),
                                         rank_position INTEGER,
 
     -- Scoring breakdown (for debugging and analytics)
-                                        geo_score NUMERIC(3,2) CHECK (geo_score >= 0 AND geo_score <= 1),
-                                        interest_score NUMERIC(3,2) CHECK (interest_score >= 0 AND interest_score <= 1),
-                                        interaction_score NUMERIC(3,2) CHECK (interaction_score >= 0 AND interaction_score <= 1),
-                                        popularity_score NUMERIC(3,2) CHECK (popularity_score >= 0 AND popularity_score <= 1),
-                                        recency_score NUMERIC(3,2) CHECK (recency_score >= 0 AND recency_score <= 1),
+                                        geo_score DOUBLE PRECISION CHECK (geo_score >= 0 AND geo_score <= 1),
+                                        interest_score DOUBLE PRECISION CHECK (interest_score >= 0 AND interest_score <= 1),
+                                        interaction_score DOUBLE PRECISION CHECK (interaction_score >= 0 AND interaction_score <= 1),
+                                        popularity_score DOUBLE PRECISION CHECK (popularity_score >= 0 AND popularity_score <= 1),
+                                        recency_score DOUBLE PRECISION CHECK (recency_score >= 0 AND recency_score <= 1),
 
     -- User interaction tracking
                                         recommended_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -30,7 +30,7 @@ CREATE TABLE recommendation_history (
     -- Metadata
                                         recommendation_reason TEXT[],  -- Array of reasons for recommendation
                                         algorithm_version VARCHAR(10) DEFAULT 'v1.0',
-                                        distance_km NUMERIC(10,2),     -- Distance from user to event
+                                        distance_km DOUBLE PRECISION,     -- Distance from user to event
 
     -- Timestamps
                                         created_at TIMESTAMP DEFAULT NOW(),

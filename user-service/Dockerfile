@@ -11,7 +11,9 @@ COPY user-service/settings.xml /root/.m2/settings.xml
 RUN mvn -f user-service/pom.xml dependency:go-offline -B
 
 # Now copy source code (this layer changes frequently)
-COPY user-service/src user-service/src
+COPY user-service/src/main/resources user-service/src/main/resources
+COPY user-service/src/main/java user-service/src/main/java
+
 
 # Build the JAR
 RUN mvn -f user-service/pom.xml clean package -DskipTests

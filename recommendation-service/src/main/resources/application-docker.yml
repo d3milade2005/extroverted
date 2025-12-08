@@ -14,6 +14,17 @@ spring:
           issuer-uri: http://keycloak:8080/realms/extroverted
           jwk-set-uri: http://keycloak:8080/realms/extroverted/protocol/openid-connect/certs
 
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+services:
+  user-service:
+    url: http://user-service:8083
+  event-service:
+    url: http://event-service:8084
+
 logging:
   level:
     root: INFO

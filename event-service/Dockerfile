@@ -11,7 +11,8 @@ COPY event-service/settings.xml /root/.m2/settings.xml
 RUN mvn -f event-service/pom.xml dependency:go-offline -B
 
 # Now copy source code (this layer changes frequently)
-COPY event-service/src event-service/src
+COPY event-service/src/main/resources event-service/src/main/resources
+COPY event-service/src/main/java event-service/src/main/java
 
 # Build the JAR
 RUN mvn -f event-service/pom.xml clean package -DskipTests
@@ -32,7 +33,7 @@ USER spring:spring
 EXPOSE 8084
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8083/actuator/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8084/actuator/health || exit 1
 
 ENTRYPOINT ["java", \
     "-XX:+UseContainerSupport", \

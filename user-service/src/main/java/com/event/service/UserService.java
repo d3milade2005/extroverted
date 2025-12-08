@@ -14,6 +14,8 @@ import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -23,7 +25,9 @@ public class UserService {
 
     @Transactional
     public UserProfileResponse initializeUser(String keycloakId, String username, String email, String firstName, String lastName, InitializeUserRequest initializeUserRequest) {
-        if (userRepository.existsByKeycloakId(keycloakId)) {
+        UUID id = UUID.fromString(keycloakId);
+
+        if (userRepository.existsById(id)) {
             throw new RuntimeException("User already exists");
         }
 
@@ -33,7 +37,7 @@ public class UserService {
         }
 
         User user = User.builder()
-                .keycloakId(keycloakId)
+                .id(id)
                 .username(username)
                 .email(email)
                 .firstName(firstName)
@@ -53,14 +57,16 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserProfileResponse getUserProfile(String keycloakId) {
-        User user = userRepository.findByKeycloakId(keycloakId)
+        UUID id = UUID.fromString(keycloakId);
+        User user = userRepository.findById(id)
                 .orElseThrow(() ->  new RuntimeException("User not found"));
         return mapToResponse(user);
     }
 
     @Transactional
     public UserProfileResponse updatePreferences(String keycloakId, @Valid UpdatePreferencesRequest request) {
-        User user = userRepository.findByKeycloakId(keycloakId)
+        UUID id = UUID.fromString(keycloakId);
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (request.getInterests() != null) {
@@ -72,14 +78,14 @@ public class UserService {
         }
 
         user = userRepository.save(user);
-        log.info("Updated preferences for user: {}", keycloakId);
 
         return mapToResponse(user);
     }
 
     @Transactional
     public UserProfileResponse updateLocation(String keycloakId, UpdateLocationRequest request) {
-        User user = userRepository.findByKeycloakId(keycloakId)
+        UUID id = UUID.fromString(keycloakId);
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Point location = createPoint(request.getLatitude(), request.getLongitude());
@@ -90,17 +96,16 @@ public class UserService {
         }
 
         user = userRepository.save(user);
-        log.info("Updated location for user: {}", keycloakId);
 
         return mapToResponse(user);
     }
 
     @Transactional
     public void deleteUser(String keycloakId) {
-        User user = userRepository.findByKeycloakId(keycloakId)
+        UUID id = UUID.fromString(keycloakId);
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
-        log.info("Deleted user: {}", keycloakId);
     }
 
     private Point createPoint(Double latitude, Double longitude) {
@@ -117,7 +122,7 @@ public class UserService {
             );
         }
         return UserProfileResponse.builder()
-                .keycloakId(user.getKeycloakId())
+                .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())

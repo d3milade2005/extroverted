@@ -11,7 +11,8 @@ COPY auth-service/settings.xml /root/.m2/settings.xml
 RUN mvn -f auth-service/pom.xml dependency:go-offline -B
 
 # Now copy source code (this layer changes frequently)
-COPY auth-service/src auth-service/src
+COPY auth-service/src/main/resources auth-service/src/main/resources
+COPY auth-service/src/main/java auth-service/src/main/java
 
 # Build the JAR
 RUN mvn -f auth-service/pom.xml clean package -DskipTests

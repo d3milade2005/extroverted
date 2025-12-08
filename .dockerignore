@@ -1,0 +1,39 @@
+# Maven target directories
+*/target/
+target/
+
+# Git
+.git
+.gitignore
+
+# IDE / Editors
+.idea
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local config files
+.env
+*.local
+*.properties.local
+
+# Docker
+docker-compose.yml
+Dockerfile
+
+# Node modules (if any frontend bundled)
+node_modules/
+dist/
+
+# Build tool cache (optional)
+.mvn/wrapper/maven-wrapper.jar

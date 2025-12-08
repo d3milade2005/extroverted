@@ -1,6 +1,7 @@
 package com.event.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +15,12 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EventDTO {
     private UUID id;
     private String title;
     private String description;
-    private String category;
+    private CategoryDTO category;
 
     // Host information
     private UUID hostId;
@@ -31,6 +33,8 @@ public class EventDTO {
     // Time information
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+
+    private Integer remainingTickets;
 
     // Ticket information
     private BigDecimal ticketPrice;
@@ -75,5 +79,20 @@ public class EventDTO {
      */
     public boolean isFree() {
         return ticketPrice == null || ticketPrice.compareTo(BigDecimal.ZERO) == 0;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CategoryDTO {
+        private UUID id;
+        private String name;
+        private String description;
+        private String icon;
+    }
+
+    public String getCategoryName() {
+        return category != null ? category.getName() : null;
     }
 }

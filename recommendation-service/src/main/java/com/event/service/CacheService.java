@@ -34,13 +34,6 @@ public class CacheService {
     private static final String SIMILAR_PREFIX = "recommendations:similar:";
     private static final String CATEGORY_PREFIX = "recommendations:category:";
 
-    /**
-     * Cache user recommendations
-     *
-     * @param userId User ID
-     * @param page Page number
-     * @param recommendations List of recommendations
-     */
     public void cacheUserRecommendations(
             UUID userId,
             int page,
@@ -50,65 +43,31 @@ public class CacheService {
         cache(key, recommendations, userRecommendationsTTL, TimeUnit.MINUTES);
     }
 
-    /**
-     * Get cached user recommendations
-     *
-     * @param userId User ID
-     * @param page Page number
-     * @return Cached recommendations or null if not found
-     */
     public List<EventRecommendationResponse> getUserRecommendations(UUID userId, int page) {
         String key = getUserRecommendationsKey(userId, page);
         return getRecommendations(key);
     }
 
-    /**
-     * Cache trending events
-     *
-     * @param recommendations List of trending events
-     */
     public void cacheTrendingEvents(List<EventRecommendationResponse> recommendations) {
         cache(TRENDING_PREFIX, recommendations, trendingEventsTTL, TimeUnit.MINUTES);
     }
 
-    /**
-     * Get cached trending events
-     *
-     * @return Cached trending events or null if not found
-     */
+
     public List<EventRecommendationResponse> getTrendingEvents() {
         return getRecommendations(TRENDING_PREFIX);
     }
 
-    /**
-     * Cache similar events
-     *
-     * @param eventId Event ID
-     * @param recommendations List of similar events
-     */
     public void cacheSimilarEvents(UUID eventId, List<EventRecommendationResponse> recommendations) {
         String key = SIMILAR_PREFIX + eventId;
         cache(key, recommendations, similarEventsTTL, TimeUnit.MINUTES);
     }
 
-    /**
-     * Get cached similar events
-     *
-     * @param eventId Event ID
-     * @return Cached similar events or null if not found
-     */
+
     public List<EventRecommendationResponse> getSimilarEvents(UUID eventId) {
         String key = SIMILAR_PREFIX + eventId;
         return getRecommendations(key);
     }
 
-    /**
-     * Cache category recommendations
-     *
-     * @param userId User ID
-     * @param category Category name
-     * @param recommendations List of recommendations
-     */
     public void cacheCategoryRecommendations(
             UUID userId,
             String category,
@@ -118,24 +77,13 @@ public class CacheService {
         cache(key, recommendations, userRecommendationsTTL, TimeUnit.MINUTES);
     }
 
-    /**
-     * Get cached category recommendations
-     *
-     * @param userId User ID
-     * @param category Category name
-     * @return Cached recommendations or null if not found
-     */
+
     public List<EventRecommendationResponse> getCategoryRecommendations(UUID userId, String category) {
         String key = CATEGORY_PREFIX + userId + ":" + category;
         return getRecommendations(key);
     }
 
-    /**
-     * Invalidate all caches for a user
-     * Called when user updates preferences or interactions
-     *
-     * @param userId User ID
-     */
+
     public void invalidateUserCache(UUID userId) {
         String pattern = USER_RECOMMENDATIONS_PREFIX + userId + ":*";
         String categoryPattern = CATEGORY_PREFIX + userId + ":*";
@@ -146,29 +94,19 @@ public class CacheService {
         log.info("Invalidated cache for user {}", userId);
     }
 
-    /**
-     * Invalidate trending cache
-     * Called when new event is created or event gets popular
-     */
+
     public void invalidateTrendingCache() {
         redisTemplate.delete(TRENDING_PREFIX);
         log.info("Invalidated trending cache");
     }
 
-    /**
-     * Invalidate similar events cache
-     *
-     * @param eventId Event ID
-     */
+
     public void invalidateSimilarEventsCache(UUID eventId) {
         String key = SIMILAR_PREFIX + eventId;
         redisTemplate.delete(key);
         log.info("Invalidated similar events cache for event {}", eventId);
     }
 
-    /**
-     * Generic cache method
-     */
     private void cache(String key, Object value, long timeout, TimeUnit unit) {
         try {
             redisTemplate.opsForValue().set(key, value, timeout, unit);
@@ -178,10 +116,6 @@ public class CacheService {
         }
     }
 
-    /**
-     * Get recommendations from cache
-     */
-    @SuppressWarnings("unchecked")
     private List<EventRecommendationResponse> getRecommendations(String key) {
         try {
             Object cached = redisTemplate.opsForValue().get(key);
@@ -200,9 +134,6 @@ public class CacheService {
         return null;
     }
 
-    /**
-     * Delete keys matching pattern
-     */
     private void deleteByPattern(String pattern) {
         try {
             var keys = redisTemplate.keys(pattern);
@@ -215,16 +146,11 @@ public class CacheService {
         }
     }
 
-    /**
-     * Build user recommendations cache key
-     */
+
     private String getUserRecommendationsKey(UUID userId, int page) {
         return USER_RECOMMENDATIONS_PREFIX + userId + ":page:" + page;
     }
 
-    /**
-     * Check if cache exists for a key
-     */
     public boolean hasKey(String key) {
         try {
             return Boolean.TRUE.equals(redisTemplate.hasKey(key));
@@ -234,9 +160,6 @@ public class CacheService {
         }
     }
 
-    /**
-     * Get remaining TTL for a key
-     */
     public long getTTL(String key) {
         try {
             Long ttl = redisTemplate.getExpire(key, TimeUnit.SECONDS);

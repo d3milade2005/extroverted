@@ -37,26 +37,26 @@ public class RecommendationHistory {
     private UUID eventId;
 
     // Overall score and ranking
-    @Column(nullable = false, precision = 3, scale = 2)
+    @Column(nullable = false)
     private Double score;
 
     @Column(name = "rank_position")
     private Integer rankPosition;
 
     // Scoring breakdown
-    @Column(name = "geo_score", precision = 3, scale = 2)
+    @Column(name = "geo_score")
     private Double geoScore;
 
-    @Column(name = "interest_score", precision = 3, scale = 2)
+    @Column(name = "interest_score")
     private Double interestScore;
 
-    @Column(name = "interaction_score", precision = 3, scale = 2)
+    @Column(name = "interaction_score")
     private Double interactionScore;
 
-    @Column(name = "popularity_score", precision = 3, scale = 2)
+    @Column(name = "popularity_score")
     private Double popularityScore;
 
-    @Column(name = "recency_score", precision = 3, scale = 2)
+    @Column(name = "recency_score")
     private Double recencyScore;
 
     // User interaction tracking
@@ -93,7 +93,7 @@ public class RecommendationHistory {
     @Builder.Default
     private String algorithmVersion = "v1.0";
 
-    @Column(name = "distance_km", precision = 10, scale = 2)
+    @Column(name = "distance_km")
     private Double distanceKm;
 
     @CreationTimestamp

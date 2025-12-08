@@ -11,7 +11,8 @@ COPY recommendation-service/settings.xml /root/.m2/settings.xml
 RUN mvn -f recommendation-service/pom.xml dependency:go-offline -B
 
 # Now copy source code (this layer changes frequently)
-COPY recommendation-service/src recommendation-service/src
+COPY recommendation-service/src/main/resources recommendation-service/src/main/resources
+COPY recommendation-service/src/main/java recommendation-service/src/main/java
 
 # Build the JAR
 RUN mvn -f recommendation-service/pom.xml clean package -DskipTests
@@ -29,10 +30,10 @@ COPY --from=build /workspace/recommendation-service/target/*.jar app.jar
 RUN chown -R spring:spring /app
 USER spring:spring
 
-EXPOSE 8084
+EXPOSE 8085
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8083/actuator/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8085/actuator/health || exit 1
 
 ENTRYPOINT ["java", \
     "-XX:+UseContainerSupport", \

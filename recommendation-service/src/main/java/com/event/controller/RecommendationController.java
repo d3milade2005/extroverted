@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/recommendations")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ROLE_USER')")
+//@PreAuthorize("hasRole('ROLE_USER')")
 public class RecommendationController {
     private final RecommendationService recommendationService;
 

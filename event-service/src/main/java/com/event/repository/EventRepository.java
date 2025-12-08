@@ -16,35 +16,31 @@ import java.util.UUID;
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
 
-    // Find events by host
     Page<Event> findByHostId(UUID hostId, Pageable pageable);
 
-    // Find events by category
     Page<Event> findByCategoryId(UUID categoryId, Pageable pageable);
 
-    // Find events by status
     Page<Event> findByStatus(EventStatus status, Pageable pageable);
 
-    // Find approved events
     Page<Event> findByStatusAndVerified(EventStatus status, Boolean verified, Pageable pageable);
 
-    // Find upcoming events
     @Query("SELECT e FROM Event e WHERE e.startTime > :now AND e.status = :status ORDER BY e.startTime ASC")
     Page<Event> findUpcomingEvents(@Param("now") LocalDateTime now, @Param("status") EventStatus status, Pageable pageable);
 
-    // Find events within radius using PostGIS (distance in meters)
+    // ✅ FIXED: This query was mostly fine, but I ensured type safety
     @Query(value = """
-        SELECT e.*, ST_Distance(e.location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) / 1000.0 AS distance_km
-        FROM events e
-        WHERE ST_DWithin(
-            e.location::geography,
-            ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
-            :radiusMeters
-        )
-        AND e.status = 'APPROVED'
-        AND e.start_time > :now
-        ORDER BY distance_km ASC
-        """, nativeQuery = true)
+    SELECT CAST(e.id AS text) as event_id, 
+           ST_Distance(e.location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) / 1000.0 AS distance_km
+    FROM events e
+    WHERE ST_DWithin(
+        e.location::geography,
+        ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
+        :radiusMeters
+    )
+    AND e.status = 'APPROVED' 
+    AND e.start_time > :now
+    ORDER BY distance_km ASC
+    """, nativeQuery = true)
     List<Object[]> findEventsNearby(
             @Param("latitude") Double latitude,
             @Param("longitude") Double longitude,
@@ -52,9 +48,9 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             @Param("now") LocalDateTime now
     );
 
-    // Search events with filters
+    // ✅ CRITICAL FIX: Fixed the ORDER BY clause to use the calculation instead of the alias
     @Query(value = """
-        SELECT e.*, 
+        SELECT e.id, 
         CASE 
             WHEN :latitude IS NOT NULL AND :longitude IS NOT NULL 
             THEN ST_Distance(e.location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography) / 1000.0 
@@ -62,13 +58,13 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         END AS distance_km
         FROM events e
         WHERE 
-            (:categoryId IS NULL OR e.category_id = CAST(:categoryId AS uuid))
+            (:categoryId IS NULL OR CAST(e.category_id AS text) = :categoryId) 
             AND (:status IS NULL OR e.status = :status)
             AND (:verifiedOnly IS NULL OR :verifiedOnly = false OR e.verified = true)
             AND (:freeOnly IS NULL OR :freeOnly = false OR e.ticket_price = 0)
             AND (:availableTicketsOnly IS NULL OR :availableTicketsOnly = false OR e.ticket_limit IS NULL OR e.tickets_sold < e.ticket_limit)
-            AND (:startDate IS NULL OR e.start_time >= :startDate)
-            AND (:endDate IS NULL OR e.end_time <= :endDate)
+            AND (CAST(:startDate AS timestamp) IS NULL OR e.start_time >= CAST(:startDate AS timestamp))
+            AND (CAST(:endDate AS timestamp) IS NULL OR e.end_time <= CAST(:endDate AS timestamp))
             AND (:minPrice IS NULL OR e.ticket_price >= :minPrice)
             AND (:maxPrice IS NULL OR e.ticket_price <= :maxPrice)
             AND (:keyword IS NULL OR LOWER(e.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :keyword, '%')))
@@ -81,7 +77,10 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
                 )
             )
         ORDER BY 
-            CASE WHEN :sortBy = 'distance' AND distance_km IS NOT NULL THEN distance_km END ASC,
+            CASE 
+                WHEN :sortBy = 'distance' AND :latitude IS NOT NULL AND :longitude IS NOT NULL 
+                THEN ST_Distance(e.location::geography, ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography)
+            END ASC,
             CASE WHEN :sortBy = 'startTime' AND :sortDirection = 'ASC' THEN e.start_time END ASC,
             CASE WHEN :sortBy = 'startTime' AND :sortDirection = 'DESC' THEN e.start_time END DESC,
             CASE WHEN :sortBy = 'createdAt' AND :sortDirection = 'ASC' THEN e.created_at END ASC,
@@ -107,9 +106,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             @Param("sortDirection") String sortDirection
     );
 
-    // Count events by host
     long countByHostId(UUID hostId);
 
-    // Count events by category
     long countByCategoryId(UUID categoryId);
 }

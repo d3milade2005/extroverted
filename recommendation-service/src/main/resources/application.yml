@@ -70,10 +70,7 @@ recommendation:
   # Cold start configuration
   cold-start:
     default-radius-km: 20      # Search radius for new users
-    default-interests:         # Default interests for new users
-      - music
-      - food
-      - nightlife
+    default-interests: music,food,nightlife     # Default interests for new users
 
   # Pagination defaults
   pagination:
@@ -92,7 +89,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info
   endpoint:
     health:
       show-details: always
