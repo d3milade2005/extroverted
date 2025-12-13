@@ -21,6 +21,7 @@
         <module>event-service</module>
         <module>recommendation-service</module>
         <module>admin-service</module>
+        <module>api-gateway-service</module>
     </modules>
 
 	<properties>

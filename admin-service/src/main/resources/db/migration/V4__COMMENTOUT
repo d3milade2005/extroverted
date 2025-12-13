@@ -1,0 +1,107 @@
+-- =====================================================
+-- CityVibe Admin Service - Promoter Verifications Table
+-- =====================================================
+-- STATUS: COMMENTED OUT - TO BE IMPLEMENTED LATER
+-- Purpose: KYC and verification for event promoters/hosts
+-- =====================================================
+
+/*
+-- This migration is commented out for now
+-- Uncomment when ready to implement KYC functionality
+
+CREATE TABLE IF NOT EXISTS promoter_verifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    -- Promoter Details
+    promoter_id UUID UNIQUE NOT NULL,
+
+    -- Business Information
+    business_name VARCHAR(255),
+    business_type VARCHAR(100),
+    business_registration_number VARCHAR(100),
+
+    -- KYC Documents
+    id_document_type VARCHAR(50),
+    id_document_number VARCHAR(100),
+    id_document_url TEXT,
+    proof_of_address_url TEXT,
+    business_registration_url TEXT,
+
+    -- Social Verification (Alternative to KYC)
+    instagram_handle VARCHAR(100),
+    twitter_handle VARCHAR(100),
+    facebook_page VARCHAR(255),
+    website_url VARCHAR(255),
+
+    -- Verification Status
+    verification_status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+    verified_at TIMESTAMP,
+    verified_by UUID,
+
+    -- Rejection Details
+    rejection_reason TEXT,
+    rejected_at TIMESTAMP,
+    rejected_by UUID,
+
+    -- Additional Information
+    notes TEXT,
+    admin_notes TEXT,
+
+    -- Metadata
+    submitted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =====================================================
+-- Comments
+-- =====================================================
+COMMENT ON TABLE promoter_verifications IS 'KYC and verification documents for event promoters';
+COMMENT ON COLUMN promoter_verifications.id_document_type IS 'Type: NATIONAL_ID, DRIVERS_LICENSE, INTERNATIONAL_PASSPORT, VOTERS_CARD';
+COMMENT ON COLUMN promoter_verifications.verification_status IS 'Status: PENDING, APPROVED, REJECTED, RESUBMISSION_REQUIRED';
+
+-- =====================================================
+-- Indexes
+-- =====================================================
+CREATE INDEX idx_promoter_verifications_promoter ON promoter_verifications(promoter_id);
+CREATE INDEX idx_promoter_verifications_status ON promoter_verifications(verification_status);
+CREATE INDEX idx_promoter_verifications_pending ON promoter_verifications(submitted_at DESC)
+WHERE verification_status = 'PENDING';
+
+-- =====================================================
+-- Check Constraints
+-- =====================================================
+ALTER TABLE promoter_verifications ADD CONSTRAINT check_verification_status
+CHECK (verification_status IN (
+    'PENDING', 'APPROVED', 'REJECTED', 'RESUBMISSION_REQUIRED'
+));
+
+ALTER TABLE promoter_verifications ADD CONSTRAINT check_id_document_type
+CHECK (id_document_type IS NULL OR id_document_type IN (
+    'NATIONAL_ID', 'DRIVERS_LICENSE', 'INTERNATIONAL_PASSPORT', 'VOTERS_CARD'
+));
+
+-- Ensure approved verifications have required fields
+ALTER TABLE promoter_verifications ADD CONSTRAINT check_verification_complete
+CHECK (
+    (verification_status = 'APPROVED' AND verified_by IS NOT NULL AND verified_at IS NOT NULL)
+    OR verification_status != 'APPROVED'
+);
+
+-- Ensure rejected verifications have rejection reason
+ALTER TABLE promoter_verifications ADD CONSTRAINT check_rejection_complete
+CHECK (
+    (verification_status = 'REJECTED' AND rejection_reason IS NOT NULL AND rejected_by IS NOT NULL)
+    OR verification_status != 'REJECTED'
+);
+
+*/
+
+-- =====================================================
+-- PLACEHOLDER FOR FUTURE KYC IMPLEMENTATION
+-- =====================================================
+-- When ready to implement:
+-- 1. Uncomment the SQL above
+-- 2. Run migration
+-- 3. Update corresponding entity class
+-- 4. Implement verification endpoints
+-- =====================================================
