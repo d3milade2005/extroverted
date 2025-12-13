@@ -1,9 +1,7 @@
 package com.event.controller;
 
-import com.event.dto.InitializeUserRequest;
-import com.event.dto.UpdateLocationRequest;
-import com.event.dto.UpdatePreferencesRequest;
-import com.event.dto.UserProfileResponse;
+import com.event.dto.*;
+import com.event.repository.UserRepository;
 import com.event.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +13,16 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @PostMapping("/initialize")
     @PreAuthorize("isAuthenticated()")
@@ -101,6 +103,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", "Failed to delete account", "message", e.getMessage()));
         }
+    }
+
+
+    @PostMapping("/users/batch")
+    public List<UserBatchDTO> getUsersByIds(@RequestBody List<UUID> userIds) {
+        return userRepository.findAllById(userIds).stream()
+                .map(user -> new UserBatchDTO(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getEmail()))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/health")

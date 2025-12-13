@@ -305,6 +305,30 @@ public class EventService {
         return mapToResponse(event, null, null);
     }
 
+    @Transactional(readOnly = true)
+    public Page<EventResponse> getEvents(EventStatus status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startTime").ascending());
+
+        Page<Event> events;
+
+        if (status == null) {
+            events = eventRepository.findAll(pageable);
+        }
+        else {
+            events = eventRepository.findByStatus(status, pageable);
+        }
+
+        return events.map(event -> mapToResponse(event, null, null));
+    }
+
+    @Transactional(readOnly = true)
+    public EventResponse getEventById(UUID eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
+        return mapToResponse(event, null, null);
+    }
+
+
+
     private EventResponse mapToResponse(Event event, Boolean isSaved, Boolean hasRsvp) {
         return EventResponse.builder()
                 .id(event.getId())

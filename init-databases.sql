@@ -2,6 +2,7 @@
 CREATE DATABASE user_db;
 CREATE DATABASE event_db;
 CREATE DATABASE recommendation_db;
+CREATE DATABASE admin_db;
 
 
 -- Enable PostGIS extension in user_db and connect to database
@@ -15,6 +16,8 @@ CREATE EXTENSION IF NOT EXISTS postgis_topology;
 
 \c recommendation_db
 -- recommendation_service doesn't need PostGIS, so we skip it'
+
+\c admin_db
 
 
 -- since this file runs at the very first start of the container

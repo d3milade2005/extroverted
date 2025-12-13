@@ -20,6 +20,7 @@
         <module>user-service</module>
         <module>event-service</module>
         <module>recommendation-service</module>
+        <module>admin-service</module>
     </modules>
 
 	<properties>

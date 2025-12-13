@@ -1,12 +1,15 @@
 package com.event.controller;
 
 import com.event.dto.*;
+import com.event.entity.Event;
 import com.event.entity.EventStatus;
+import com.event.repository.EventRepository;
 import com.event.service.EventService;
 import com.event.service.InteractionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -156,6 +160,19 @@ public class EventController {
         EventResponse response = eventService.updateEventStatus(id, EventStatus.valueOf(status.toUpperCase()));
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<Page<EventResponse>> getEvents(@RequestParam(required = false) EventStatus status, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size){
+        Page<EventResponse> events = eventService.getEvents(status, page, size);
+        return ResponseEntity.ok(events);
+    }
+
+    @GetMapping("/getEvent/{id}")
+    public ResponseEntity<EventResponse> getEventById(@PathVariable UUID id){
+        EventResponse event = eventService.getEventById(id);
+        return ResponseEntity.ok(event);
+    }
+
 
     private UUID getUserId(Authentication authentication) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
