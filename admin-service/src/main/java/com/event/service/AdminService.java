@@ -84,7 +84,6 @@ public class AdminService {
 
         Map<String, Object> meta = getStringObjectMap(request, host, event, adminName);
 
-        // C. Call Your Action Service
         String description = (actionType == ActionType.APPROVE_EVENT)
                 ? "Approved event: " + event.getTitle()
                 : "Rejected event: " + event.getTitle();

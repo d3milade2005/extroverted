@@ -21,8 +21,12 @@ public interface AdminActionRepository extends JpaRepository<AdminAction, UUID> 
     // Find actions by type
     Page<AdminAction> findByActionType(ActionType actionType, Pageable pageable);
 
+    Page<AdminAction> findByTargetEntityId(UUID targetEntityId, Pageable pageable);
+
+    Page<AdminAction> findByTargetEntityType(EntityType entityType, Pageable pageable);
+
     // Find actions for specific entity
-    List<AdminAction> findByTargetEntityTypeAndTargetEntityId(EntityType entityType, UUID entityId);
+    Page<AdminAction> findByTargetEntityTypeAndTargetEntityId(EntityType entityType, UUID entityId, Pageable pageable);
 
     // Find recent actions (last 30 days)
     @Query("SELECT a FROM AdminAction a WHERE a.createdAt >= :since ORDER BY a.createdAt DESC")

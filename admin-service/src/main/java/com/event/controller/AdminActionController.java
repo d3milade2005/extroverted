@@ -1,6 +1,8 @@
 package com.event.controller;
 
 import com.event.dto.AdminActionResponse;
+import com.event.entity.ActionType;
+import com.event.entity.EntityType;
 import com.event.entity.AdminAction;
 import com.event.service.AdminActionService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,43 @@ public class AdminActionController {
             Pageable pageable
     ) {
         Page<AdminAction> actions = actionService.getRecentActions(days, pageable);
+        return ResponseEntity.ok(actions.map(AdminActionResponse::from));
+    }
+
+    @GetMapping("/actionType/{actionType}")
+    public ResponseEntity<Page<AdminActionResponse>> getActionsByType(
+            @PathVariable ActionType actionType,
+            Pageable pageable
+    ) {
+        Page<AdminAction> actions = actionService.getActionType(actionType, pageable);
+        return ResponseEntity.ok(actions.map(AdminActionResponse::from));
+    }
+
+    @GetMapping("/entityType/{entityType}")
+    public ResponseEntity<Page<AdminActionResponse>> getEntityByType(
+            @PathVariable EntityType entityType,
+            Pageable pageable
+    ) {
+        Page<AdminAction> actions = actionService.getEntityType(entityType, pageable);
+        return ResponseEntity.ok(actions.map(AdminActionResponse::from));
+    }
+
+    @GetMapping("/entity/{entityId}")
+    public ResponseEntity<Page<AdminActionResponse>> getEntityById(
+            @PathVariable UUID entityId,
+            Pageable pageable
+    ) {
+        Page<AdminAction> actions = actionService.getEntityId(entityId, pageable);
+        return ResponseEntity.ok(actions.map(AdminActionResponse::from));
+    }
+
+    @GetMapping("/entity/{entityId}/{entityType}")
+    public ResponseEntity<Page<AdminActionResponse>> getEntityByTypeAndId(
+            @PathVariable UUID entityId,
+            @PathVariable EntityType entityType,
+            Pageable pageable
+    ) {
+        Page<AdminAction> actions = actionService.getEntityByTypeAndId(entityId, entityType, pageable);
         return ResponseEntity.ok(actions.map(AdminActionResponse::from));
     }
 }

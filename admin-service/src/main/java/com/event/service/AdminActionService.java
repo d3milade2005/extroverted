@@ -58,6 +58,26 @@ public class AdminActionService {
     }
 
     @Transactional(readOnly = true)
+    public Page<AdminAction> getActionType(ActionType actionType, Pageable pageable) {
+        return actionRepository.findByActionType(actionType, pageable);
+    }
+
+    @Transactional
+    public Page<AdminAction> getEntityType(EntityType entityType, Pageable pageable) {
+        return actionRepository.findByTargetEntityType(entityType, pageable);
+    }
+
+    @Transactional
+    public Page<AdminAction> getEntityId(UUID entityId, Pageable pageable) {
+        return actionRepository.findByTargetEntityId(entityId, pageable);
+    }
+
+    @Transactional
+    public Page<AdminAction> getEntityByTypeAndId(UUID entityId, EntityType entityType, Pageable pageable) {
+        return actionRepository.findByTargetEntityTypeAndTargetEntityId(entityType, entityId, pageable);
+    }
+
+    @Transactional(readOnly = true)
     public long countAdminActionsToday(UUID adminId) {
         return actionRepository.countByAdminToday(adminId, LocalDateTime.now().toLocalDate().atStartOfDay());
     }
