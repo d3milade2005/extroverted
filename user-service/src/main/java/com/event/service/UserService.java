@@ -4,6 +4,9 @@ import com.event.dto.*;
 import com.event.entity.User;
 import com.event.entity.UserRole;
 import com.event.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +51,7 @@ public class UserService {
                 .fashionStyle(initializeUserRequest.getFashionStyle())
                 .role(UserRole.USER)
                 .verified(false)
+                .active(true)
                 .build();
 
         user = userRepository.save(user);
@@ -112,6 +116,66 @@ public class UserService {
         return geometryFactory.createPoint(new Coordinate(longitude, latitude));
     }
 
+    @Transactional(readOnly = true)
+    public Page<UserProfileResponse> getAllUsers(String query, Boolean verified, Boolean active, Pageable pageable) {
+        if (query != null && !query.isBlank()) {
+            return userRepository.searchUsers(query, pageable).map(this::mapToResponse);
+        }
+        if (verified != null) {
+            return userRepository.findByVerified(verified, pageable).map(this::mapToResponse);
+        }
+        if (active != null) {
+            return userRepository.findByActive(active, pageable).map(this::mapToResponse);
+        }
+        return userRepository.findAll(pageable).map(this::mapToResponse);
+    }
+
+    @Transactional
+    public void banUser(UUID userId, BanReason reason) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!user.getActive()) {
+            throw new IllegalStateException("User is already banned");
+        }
+
+        user.setActive(false);
+        // send email to user on why they were banned
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void unbanUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        user.setActive(true);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void toggleVerification(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        user.setVerified(!user.getVerified());
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public UserProfileResponse getUser (UUID userId) {
+        return mapToResponse(userRepository.findById(userId).orElseThrow( () -> new EntityNotFoundException("User not found")));
+    }
+
+    @Transactional
+    public Boolean isActiveAdmin (UUID userId) {
+        return userRepository.isAdminAndActive(userId);
+    }
+
+    @Transactional
+    public Page<UserProfileResponse> getAllAdmins(Pageable pageable) {
+        return userRepository.findAllByRole(UserRole.ADMIN, pageable).map(this::mapToResponse);
+    }
 
     private UserProfileResponse mapToResponse(User user) {
         LocationDTO locationDTO = null;
@@ -133,6 +197,7 @@ public class UserService {
                 .interests(user.getInterests())
                 .role(user.getRole().name())
                 .verified(user.getVerified())
+                .active(user.getActive())
                 .build();
     }
 }

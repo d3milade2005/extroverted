@@ -57,6 +57,10 @@ public class User {
     @Builder.Default
     private Boolean verified = false;
 
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean active = true;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

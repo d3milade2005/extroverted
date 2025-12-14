@@ -1,10 +1,13 @@
 package com.event.controller;
 
 import com.event.dto.*;
+import com.event.entity.User;
 import com.event.repository.UserRepository;
 import com.event.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -107,10 +111,67 @@ public class UserController {
 
 
     @PostMapping("/users/batch")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserBatchDTO> getUsersByIds(@RequestBody List<UUID> userIds) {
         return userRepository.findAllById(userIds).stream()
                 .map(user -> new UserBatchDTO(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getEmail()))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/allUsers")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserProfileResponse>> getUsers(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Boolean verified,
+            @RequestParam(required = false) Boolean active,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.getAllUsers(query, verified, active, pageable));
+    }
+
+    @PutMapping("/{id}/ban")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> banUser(
+            @PathVariable UUID id,
+            @RequestBody @Valid BanReason reason
+    ) {
+        userService.banUser(id, reason);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/unban")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> unbanUser(@PathVariable UUID id) {
+        userService.unbanUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/verify")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> verifyUser(@PathVariable UUID id) {
+        userService.toggleVerification(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserProfileResponse> getUserById(@PathVariable UUID userId) {
+        UserProfileResponse userProfileResponse = userService.getUser(userId);
+        return ResponseEntity.ok(userProfileResponse);
+    }
+
+    @GetMapping("/user/{userId}/is-active-admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> isActiveAdmin(@PathVariable UUID userId) {
+        boolean isActiveAdmin = userService.isActiveAdmin(userId);
+        return ResponseEntity.ok(isActiveAdmin);
+    }
+
+    @GetMapping("/admins")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserProfileResponse>> getAllAdmins(Pageable pageable) {
+        Page<UserProfileResponse> admins = userService.getAllAdmins(pageable);
+        return ResponseEntity.ok(admins);
     }
 
     @GetMapping("/health")

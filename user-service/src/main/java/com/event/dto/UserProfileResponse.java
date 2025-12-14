@@ -25,4 +25,5 @@ public class UserProfileResponse {
     private List<String> interests;
     private String role;
     private Boolean verified;
+    private Boolean active;
 }

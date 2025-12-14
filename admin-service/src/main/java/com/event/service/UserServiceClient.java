@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
@@ -44,6 +45,25 @@ public class UserServiceClient {
         } catch (Exception e) {
             log.error("Failed to fetch user details", e);
             return Collections.emptyMap(); // Return empty map so the main flow doesn't crash
+        }
+    }
+
+    public boolean isActiveAdmin(UUID userId) {
+        try {
+            Boolean result = userClient.get()
+                    // Matches the path we defined in the controller: /user/{userId}/is-active-admin
+                    .uri("/user/{userId}/is-active-admin", userId)
+                    .retrieve()
+                    .body(Boolean.class);
+
+            // Safe check to handle nulls, though unlikely
+            return Boolean.TRUE.equals(result);
+        } catch (HttpClientErrorException.NotFound e) {
+            // If the user ID itself is invalid and returns 404
+            return false;
+        } catch (Exception e) {
+            // Log error or handle specific connection issues
+            throw new RuntimeException("Failed to verify admin status for user: " + userId, e);
         }
     }
 }

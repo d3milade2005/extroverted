@@ -29,7 +29,7 @@ public class EventReportService {
 
     private final EventReportRepository reportRepository;
     private final AdminActionService adminActionService;
-    private final AdminUserService adminUserService;
+    private final UserServiceClient userServiceClient;
 
     @Transactional
     public ReportEvent createReport(CreateReportRequest request, UUID userId, String ipAddress) {
@@ -88,10 +88,14 @@ public class EventReportService {
         log.info("Assigning report {} to admin {} by admin {}", reportId, assignToAdminId, currentAdminId);
 
         // Verify current admin has permission
-        adminUserService.verifyPermission(currentAdminId, Permission.ASSIGN_REPORTS);
+//        adminUserService.verifyPermission(currentAdminId, Permission.ASSIGN_REPORTS);
 
-        // Verify target admin exists and is active
-        adminUserService.getByUserId(assignToAdminId);
+        boolean isValidAdmin = userServiceClient.isActiveAdmin(assignToAdminId);
+
+        // 2. Logic gate
+        if (!isValidAdmin) {
+            throw new SecurityException("The user " + assignToAdminId + " is not an active Admin.");
+        }
 
         ReportEvent report = getReportById(reportId);
 
@@ -121,7 +125,7 @@ public class EventReportService {
         log.info("Resolving report {} by admin {}", reportId, adminId);
 
         // Verify admin has permission
-        adminUserService.verifyPermission(adminId, Permission.MANAGE_REPORTS);
+//        adminUserService.verifyPermission(adminId, Permission.MANAGE_REPORTS);
 
         ReportEvent report = getReportById(reportId);
 
@@ -151,7 +155,7 @@ public class EventReportService {
         log.info("Dismissing report {} by admin {}", reportId, adminId);
 
         // Verify admin has permission
-        adminUserService.verifyPermission(adminId, Permission.MANAGE_REPORTS);
+//        adminUserService.verifyPermission(adminId, Permission.MANAGE_REPORTS);
 
         ReportEvent report = getReportById(reportId);
 
