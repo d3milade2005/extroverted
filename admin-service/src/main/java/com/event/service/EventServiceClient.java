@@ -74,4 +74,26 @@ public class EventServiceClient {
             return Optional.empty();
         }
     }
+
+    public void updateEventStatus(UUID eventId, String status) {
+        try {
+            eventClient.patch()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/api/events/{id}/status") // Match your Controller's path
+                            .queryParam("status", status)    // Add ?status=APPROVED
+                            .build(eventId))                 // Replace {id} with eventId
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                        throw new RuntimeException("Invalid status update request");
+                    })
+                    .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                        throw new RuntimeException("Event Service is down");
+                    })
+                    .toBodilessEntity(); // We don't need the return object, just success (200 OK)
+
+        } catch (Exception e) {
+            log.error("Failed to update status for event {}: {}", eventId, e.getMessage());
+            throw new RuntimeException("Could not communicate with Event Service");
+        }
+    }
 }

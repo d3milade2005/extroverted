@@ -38,8 +38,6 @@ public class UserServiceClient {
                     .retrieve()
                     .body(new ParameterizedTypeReference<List<UserBatchDTO>>() {});
 
-            // Convert List to Map for fast lookup (O(1) performance)
-            // Key = UserID, Value = UserDTO
             return users.stream()
                     .collect(Collectors.toMap(UserBatchDTO::getHostId, user -> user));
 

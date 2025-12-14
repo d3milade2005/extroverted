@@ -1,8 +1,12 @@
 package com.event.service;
 
 import com.event.dto.*;
+import com.event.entity.ActionType;
+import com.event.entity.EntityType;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -13,6 +17,7 @@ import java.util.stream.Collectors;
 public class AdminService {
     private final EventServiceClient eventServiceClient;
     private final UserServiceClient userServiceClient;
+    private final AdminActionService adminActionService;
 
     public List<AdminEventsResponse> getEvents(String status, int page, int size) {
         // 1. Get raw events
@@ -43,39 +48,76 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
-    public ApproveEventDTO approveEvent(UUID eventId, UUID userId, String adminName) {
+    @Transactional
+    public void approveEvent(UUID eventId, UUID adminId, String adminName, EventActionRequest request) {
         EventDTO event = eventServiceClient.getEventById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found")); // Or custom 404 exception
-        event.setStatus("APPROVED");
+                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
+        if ("APPROVED".equals(event.getStatus())) {
+            throw new IllegalStateException("Event is already approved.");
+        }
 
+        eventServiceClient.updateEventStatus(eventId, "APPROVED");
 
-        AdminUser adminUser = new AdminUser(userId, adminName);
-
-        return ApproveEventDTO.builder()
-                .eventId(event.getId())
-                .status(event.getStatus())
-                .approvedBy(adminUser)
-                .approvedAt(LocalDateTime.now())
-                .build();
+        logEventAction(event, adminId, adminName, ActionType.APPROVE_EVENT, request);
     }
 
-    public RejectEventDTO rejectEvent(UUID eventId, UUID userId, String adminName) {
+
+    @Transactional
+    public void rejectEvent(UUID eventId, UUID adminId, String adminName, EventActionRequest request) {
         EventDTO event = eventServiceClient.getEventById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found")); // Or custom 404 exception
-        event.setStatus("CANCELLED");
+                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
-        AdminUser adminUser = new AdminUser(userId, adminName);
+        if ("REJECTED".equals(event.getStatus())) {
+            throw new IllegalStateException("Event is already rejected.");
+        }
 
-        return RejectEventDTO.builder()
-                .eventId(event.getId())
-                .status(event.getStatus())
-                .rejectedBy(adminUser)
-                .rejectedAt(LocalDateTime.now())
-                .reason("")
-                .allowResubmit(true)
-                .build();
+        eventServiceClient.updateEventStatus(eventId, "REJECTED");
 
+        logEventAction(event, adminId, adminName, ActionType.REJECT_EVENT, request);
+    }
+
+
+    private void logEventAction(EventDTO event, UUID adminId, String adminName, ActionType actionType, EventActionRequest request) {
+        Map<UUID, UserBatchDTO> users = userServiceClient.fetchUsers(Set.of(event.getHostId()));
+        UserBatchDTO host = users.get(event.getHostId());
+
+        Map<String, Object> meta = getStringObjectMap(request, host, event, adminName);
+
+        // C. Call Your Action Service
+        String description = (actionType == ActionType.APPROVE_EVENT)
+                ? "Approved event: " + event.getTitle()
+                : "Rejected event: " + event.getTitle();
+
+        adminActionService.logAction(
+                actionType,
+                adminId,
+                EntityType.EVENT,
+                event.getId(),
+                description,
+                meta
+        );
+    }
+
+    private Map<String, Object> getStringObjectMap(EventActionRequest request, UserBatchDTO host, EventDTO event, String adminName) {
+        Map<String, Object> meta = new HashMap<>();
+
+        meta.put("admin_name_snapshot", adminName);
+
+        if (host != null) {
+            meta.put("host_id", host.getHostId());
+            meta.put("host_email", host.getHostEmail());
+            meta.put("host_name", host.getHostName());
+        } else {
+            meta.put("host_info", "User not found");
+        }
+
+        // 3. Snapshot Event Context
+        meta.put("event_title", event.getTitle());
+        meta.put("action_reason", request.getReason()); // Important for Rejection
+        meta.put("custom_message", request.getCustomMessage());
+
+        return meta;
     }
 
     private AdminEventsResponse mapToAdminResponse(EventDTO event, UserBatchDTO hostUser) {

@@ -1,9 +1,10 @@
 package com.event.controller;
 
 import com.event.dto.AdminEventsResponse;
-import com.event.dto.EventDTO;
+import com.event.dto.EventActionRequest;
 import com.event.service.AdminService;
 import com.event.service.EventServiceClient;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -29,18 +31,20 @@ public class AdminController {
         return ResponseEntity.ok(events);
     }
 
-    @GetMapping("/{eventId}/approve")
-    public ResponseEntity<?> approveEvent(@PathVariable UUID eventId, Authentication authentication) {
+    @PostMapping("/{eventId}/approve")
+    public ResponseEntity<?> approveEvent(@PathVariable UUID eventId, @RequestBody @Valid EventActionRequest request, Authentication authentication) {
         UUID adminUserId = extractUserId(authentication);
         String extractedAdminName = extractAdminName(authentication);
-        return ResponseEntity.ok(adminService.approveEvent(eventId, adminUserId, extractedAdminName));
+        adminService.approveEvent(eventId, adminUserId, extractedAdminName, request);
+        return ResponseEntity.ok(Map.of("message", "Event approved successfully"));
     }
 
-    @GetMapping("/{eventId}/reject")
-    public ResponseEntity<?> rejectEvent(@PathVariable UUID eventId, Authentication authentication) {
+    @PostMapping("/{eventId}/reject")
+    public ResponseEntity<?> rejectEvent(@PathVariable UUID eventId, @RequestBody @Valid EventActionRequest request, Authentication authentication) {
         UUID adminUserId = extractUserId(authentication);
         String extractedAdminName = extractAdminName(authentication);
-        return ResponseEntity.ok(adminService.rejectEvent(eventId, adminUserId, extractedAdminName));
+        adminService.rejectEvent(eventId, adminUserId, extractedAdminName, request);
+        return ResponseEntity.ok(Map.of("message", "Event rejected"));
     }
 
 
