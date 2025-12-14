@@ -1,12 +1,6 @@
-package com.cityvibe.admin.model;
+package com.event.entity;
 
-/**
- * Enum representing the type of entity that an admin action targets.
- * Used in audit logs to identify what type of record was affected.
- *
- * @author CityVibe Team
- * @version 1.0
- */
+
 public enum EntityType {
 
     /**

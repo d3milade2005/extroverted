@@ -1,8 +1,8 @@
-package com.cityvibe.admin.controller;
+package com.event.controller;
 
-import com.cityvibe.admin.dto.response.AdminActionResponse;
-import com.cityvibe.admin.model.AdminAction;
-import com.cityvibe.admin.service.AdminActionService;
+import com.event.dto.AdminActionResponse;
+import com.event.entity.AdminAction;
+import com.event.service.AdminActionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

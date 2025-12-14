@@ -1,4 +1,4 @@
-package com.cityvibe.admin.model;
+package com.event.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

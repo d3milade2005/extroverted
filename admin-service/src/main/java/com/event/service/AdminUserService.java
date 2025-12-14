@@ -1,11 +1,11 @@
-package com.cityvibe.admin.service;
+package com.event.service;
 
-import com.cityvibe.admin.exception.ResourceNotFoundException;
-import com.cityvibe.admin.exception.UnauthorizedException;
-import com.cityvibe.admin.model.AdminRole;
-import com.cityvibe.admin.model.AdminUser;
-import com.cityvibe.admin.model.Permission;
-import com.cityvibe.admin.repository.AdminUserRepository;
+import com.event.exception.ResourceNotFoundException;
+import com.event.exception.UnauthorizedException;
+import com.event.entity.AdminRole;
+import com.event.entity.AdminUser;
+import com.event.entity.Permission;
+import com.event.repository.AdminUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.event.dto;
 
-import com.cityvibe.admin.model.ActionType;
-import com.cityvibe.admin.model.AdminAction;
-import com.cityvibe.admin.model.EntityType;
+import com.event.entity.ActionType;
+import com.event.entity.AdminAction;
+import com.event.entity.EntityType;
 import lombok.Builder;
 import lombok.Data;
 

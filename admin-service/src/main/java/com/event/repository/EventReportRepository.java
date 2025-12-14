@@ -2,6 +2,7 @@ package com.event.repository;
 
 import com.event.entity.ReportEvent;
 import com.event.entity.AdminAction;
+import com.event.entity.ReportStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @Repository
 public interface EventReportRepository extends JpaRepository<ReportEvent, UUID>{
-    Page<ReportEvent> findByStatus(AdminAction status, Pageable pageable);
+    Page<ReportEvent> findByStatus(ReportStatus status, Pageable pageable);
 
     // Find by event
     List<ReportEvent> findByEventId(UUID eventId);

@@ -1,12 +1,12 @@
-package com.cityvibe.admin.service;
+package com.event.service;
 
-import com.cityvibe.admin.dto.request.CreateReportRequest;
-import com.cityvibe.admin.dto.request.ResolveReportRequest;
-import com.cityvibe.admin.exception.ResourceNotFoundException;
-import com.cityvibe.admin.exception.UnauthorizedException;
-import com.cityvibe.admin.model.*;
-import com.cityvibe.admin.repository.EventReportRepository;
-import jakarta.persistence.metamodel.EntityType;
+import com.event.dto.CreateReportRequest;
+import com.event.dto.ResolveReportRequest;
+import com.event.exception.ResourceNotFoundException;
+import com.event.exception.UnauthorizedException;
+import com.event.entity.*;
+import com.event.entity.EntityType;
+import com.event.repository.EventReportRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,7 @@ public class EventReportService {
     private final AdminUserService adminUserService;
 
     @Transactional
-    public EventReport createReport(CreateReportRequest request, UUID userId, String ipAddress) {
+    public ReportEvent createReport(CreateReportRequest request, UUID userId, String ipAddress) {
         log.info("Creating report for event {} by user {}", request.getEventId(), userId);
 
         // Check if user already reported this event
@@ -36,7 +36,7 @@ public class EventReportService {
             throw new IllegalStateException("You have already reported this event");
         }
 
-        EventReport report = EventReport.builder()
+        ReportEvent report = ReportEvent.builder()
                 .eventId(request.getEventId())
                 .reportedBy(userId)
                 .reportReason(request.getReportReason())
@@ -47,40 +47,40 @@ public class EventReportService {
                 .reporterIp(ipAddress)
                 .build();
 
-        EventReport savedReport = reportRepository.save(report);
+        ReportEvent savedReport = reportRepository.save(report);
         log.info("Report {} created successfully", savedReport.getId());
 
         return savedReport;
     }
 
     @Transactional(readOnly = true)
-    public EventReport getReportById(UUID reportId) {
+    public ReportEvent getReportById(UUID reportId) {
         return reportRepository.findById(reportId)
                 .orElseThrow(() -> new ResourceNotFoundException("Report not found with id: " + reportId));
     }
 
     @Transactional(readOnly = true)
-    public Page<EventReport> getPendingReports(Pageable pageable) {
+    public Page<ReportEvent> getPendingReports(Pageable pageable) {
         return reportRepository.findPendingReports(pageable);
     }
 
     @Transactional(readOnly = true)
-    public Page<EventReport> getReportsByStatus(ReportStatus status, Pageable pageable) {
+    public Page<ReportEvent> getReportsByStatus(ReportStatus status, Pageable pageable) {
         return reportRepository.findByStatus(status, pageable);
     }
 
     @Transactional(readOnly = true)
-    public Page<EventReport> getMyAssignedReports(UUID adminId, Pageable pageable) {
+    public Page<ReportEvent> getMyAssignedReports(UUID adminId, Pageable pageable) {
         return reportRepository.findByAssignedTo(adminId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<EventReport> getReportsForEvent(UUID eventId) {
+    public List<ReportEvent> getReportsForEvent(UUID eventId) {
         return reportRepository.findByEventId(eventId);
     }
 
     @Transactional
-    public EventReport assignReport(UUID reportId, UUID assignToAdminId, UUID currentAdminId) {
+    public ReportEvent assignReport(UUID reportId, UUID assignToAdminId, UUID currentAdminId) {
         log.info("Assigning report {} to admin {} by admin {}", reportId, assignToAdminId, currentAdminId);
 
         // Verify current admin has permission
@@ -89,14 +89,14 @@ public class EventReportService {
         // Verify target admin exists and is active
         adminUserService.getByUserId(assignToAdminId);
 
-        EventReport report = getReportById(reportId);
+        ReportEvent report = getReportById(reportId);
 
         if (report.isResolved()) {
             throw new IllegalStateException("Cannot assign a resolved report");
         }
 
         report.assignTo(assignToAdminId);
-        EventReport savedReport = reportRepository.save(report);
+        ReportEvent savedReport = reportRepository.save(report);
 
         // Log action
         adminActionService.logAction(
@@ -113,20 +113,20 @@ public class EventReportService {
     }
 
     @Transactional
-    public EventReport resolveReport(UUID reportId, ResolveReportRequest request, UUID adminId) {
+    public ReportEvent resolveReport(UUID reportId, ResolveReportRequest request, UUID adminId) {
         log.info("Resolving report {} by admin {}", reportId, adminId);
 
         // Verify admin has permission
         adminUserService.verifyPermission(adminId, Permission.MANAGE_REPORTS);
 
-        EventReport report = getReportById(reportId);
+        ReportEvent report = getReportById(reportId);
 
         if (report.isResolved()) {
             throw new IllegalStateException("Report is already resolved");
         }
 
         report.resolve(adminId, request.getResolutionAction(), request.getResolutionNotes());
-        EventReport savedReport = reportRepository.save(report);
+        ReportEvent savedReport = reportRepository.save(report);
 
         // Log action
         adminActionService.logAction(
@@ -143,20 +143,20 @@ public class EventReportService {
     }
 
     @Transactional
-    public EventReport dismissReport(UUID reportId, String reason, UUID adminId) {
+    public ReportEvent dismissReport(UUID reportId, String reason, UUID adminId) {
         log.info("Dismissing report {} by admin {}", reportId, adminId);
 
         // Verify admin has permission
         adminUserService.verifyPermission(adminId, Permission.MANAGE_REPORTS);
 
-        EventReport report = getReportById(reportId);
+        ReportEvent report = getReportById(reportId);
 
         if (report.isResolved()) {
             throw new IllegalStateException("Report is already resolved");
         }
 
         report.dismiss(adminId, reason);
-        EventReport savedReport = reportRepository.save(report);
+        ReportEvent savedReport = reportRepository.save(report);
 
         // Log action
         adminActionService.logAction(

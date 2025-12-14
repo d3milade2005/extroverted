@@ -1,4 +1,4 @@
-package com.cityvibe.admin.exception;
+package com.event.exception;
 
 public class UnauthorizedException extends RuntimeException {
     public UnauthorizedException(String message) {

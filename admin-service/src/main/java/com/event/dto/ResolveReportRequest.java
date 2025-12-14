@@ -1,6 +1,6 @@
 package com.event.dto;
 
-import com.event.admin.model.ResolutionAction;
+import com.event.entity.ResolutionAction;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

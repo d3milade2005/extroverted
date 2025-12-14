@@ -1,6 +1,6 @@
 package com.event.dto;
 
-import com.event.admin.model.*;
+import com.event.entity.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -29,7 +29,7 @@ public class EventReportResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static EventReportResponse from(EventReport report) {
+    public static EventReportResponse from(ReportEvent report) {
         return EventReportResponse.builder()
                 .id(report.getId())
                 .eventId(report.getEventId())

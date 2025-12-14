@@ -1,9 +1,9 @@
-package com.cityvibe.admin.service;
+package com.event.service;
 
-import com.cityvibe.admin.model.ActionType;
-import com.cityvibe.admin.model.AdminAction;
-import com.cityvibe.admin.model.EntityType;
-import com.cityvibe.admin.repository.AdminActionRepository;
+import com.event.entity.ActionType;
+import com.event.entity.AdminAction;
+import com.event.entity.EntityType;
+import com.event.repository.AdminActionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

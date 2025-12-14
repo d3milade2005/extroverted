@@ -1,4 +1,4 @@
-package com.cityvibe.admin.exception;
+package com.event.exception;
 
 import lombok.Builder;
 import lombok.Data;

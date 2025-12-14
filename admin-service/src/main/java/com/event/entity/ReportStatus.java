@@ -1,4 +1,4 @@
-package com.cityvibe.admin.model;
+package com.event.entity;
 
 /**
  * Enum representing the status of a report in the investigation workflow.

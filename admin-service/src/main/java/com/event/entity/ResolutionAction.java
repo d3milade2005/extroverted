@@ -1,4 +1,4 @@
-package com.cityvibe.admin.model;
+package com.event.entity;
 
 /**
  * Enum representing the action taken to resolve a report.

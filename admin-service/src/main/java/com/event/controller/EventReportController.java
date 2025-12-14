@@ -1,11 +1,11 @@
-package com.cityvibe.admin.controller;
+package com.event.controller;
 
-import com.cityvibe.admin.dto.request.CreateReportRequest;
-import com.cityvibe.admin.dto.request.ResolveReportRequest;
-import com.cityvibe.admin.dto.response.EventReportResponse;
-import com.cityvibe.admin.model.EventReport;
-import com.cityvibe.admin.model.ReportStatus;
-import com.cityvibe.admin.service.EventReportService;
+import com.event.dto.CreateReportRequest;
+import com.event.dto.ResolveReportRequest;
+import com.event.dto.EventReportResponse;
+import com.event.entity.ReportEvent;
+import com.event.entity.ReportStatus;
+import com.event.service.EventReportService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,19 +37,19 @@ public class EventReportController {
         UUID userId = UUID.fromString(jwt.getSubject());
         String ipAddress = httpRequest.getRemoteAddr();
 
-        EventReport report = reportService.createReport(request, userId, ipAddress);
+        ReportEvent report = reportService.createReport(request, userId, ipAddress);
         return ResponseEntity.status(HttpStatus.CREATED).body(EventReportResponse.from(report));
     }
 
     @GetMapping("/pending")
     public ResponseEntity<Page<EventReportResponse>> getPendingReports(Pageable pageable) {
-        Page<EventReport> reports = reportService.getPendingReports(pageable);
+        Page<ReportEvent> reports = reportService.getPendingReports(pageable);
         return ResponseEntity.ok(reports.map(EventReportResponse::from));
     }
 
     @GetMapping("/{reportId}")
     public ResponseEntity<EventReportResponse> getReportById(@PathVariable UUID reportId) {
-        EventReport report = reportService.getReportById(reportId);
+        ReportEvent report = reportService.getReportById(reportId);
         return ResponseEntity.ok(EventReportResponse.from(report));
     }
 
@@ -58,7 +58,7 @@ public class EventReportController {
             @PathVariable ReportStatus status,
             Pageable pageable
     ) {
-        Page<EventReport> reports = reportService.getReportsByStatus(status, pageable);
+        Page<ReportEvent> reports = reportService.getReportsByStatus(status, pageable);
         return ResponseEntity.ok(reports.map(EventReportResponse::from));
     }
 
@@ -68,13 +68,13 @@ public class EventReportController {
             Pageable pageable
     ) {
         UUID adminId = UUID.fromString(jwt.getSubject());
-        Page<EventReport> reports = reportService.getMyAssignedReports(adminId, pageable);
+        Page<ReportEvent> reports = reportService.getMyAssignedReports(adminId, pageable);
         return ResponseEntity.ok(reports.map(EventReportResponse::from));
     }
 
     @GetMapping("/event/{eventId}")
     public ResponseEntity<List<EventReportResponse>> getReportsForEvent(@PathVariable UUID eventId) {
-        List<EventReport> reports = reportService.getReportsForEvent(eventId);
+        List<ReportEvent> reports = reportService.getReportsForEvent(eventId);
         List<EventReportResponse> responses = reports.stream()
                 .map(EventReportResponse::from)
                 .collect(Collectors.toList());
@@ -88,7 +88,7 @@ public class EventReportController {
             @AuthenticationPrincipal Jwt jwt
     ) {
         UUID currentAdminId = UUID.fromString(jwt.getSubject());
-        EventReport report = reportService.assignReport(reportId, adminId, currentAdminId);
+        ReportEvent report = reportService.assignReport(reportId, adminId, currentAdminId);
         return ResponseEntity.ok(EventReportResponse.from(report));
     }
 
@@ -99,7 +99,7 @@ public class EventReportController {
             @AuthenticationPrincipal Jwt jwt
     ) {
         UUID adminId = UUID.fromString(jwt.getSubject());
-        EventReport report = reportService.resolveReport(reportId, request, adminId);
+        ReportEvent report = reportService.resolveReport(reportId, request, adminId);
         return ResponseEntity.ok(EventReportResponse.from(report));
     }
 
@@ -110,7 +110,7 @@ public class EventReportController {
             @AuthenticationPrincipal Jwt jwt
     ) {
         UUID adminId = UUID.fromString(jwt.getSubject());
-        EventReport report = reportService.dismissReport(reportId, reason, adminId);
+        ReportEvent report = reportService.dismissReport(reportId, reason, adminId);
         return ResponseEntity.ok(EventReportResponse.from(report));
     }
 }

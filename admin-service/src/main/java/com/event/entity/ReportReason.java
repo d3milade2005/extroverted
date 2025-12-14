@@ -1,4 +1,4 @@
-package com.cityvibe.admin.model;
+package com.event.entity;
 
 /**
  * Enum representing the reason for reporting an event.

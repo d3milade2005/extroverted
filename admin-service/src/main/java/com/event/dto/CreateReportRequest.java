@@ -1,6 +1,6 @@
 package com.event.dto;
 
-import com.event.model.ReportReason;
+import com.event.entity.ReportReason;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
